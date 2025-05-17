@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re;
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import timedelta
@@ -199,7 +201,14 @@ class RingCam(RingEntity[RingDoorBell], Camera):
                 msg = ring_message.error_message or ""
                 send_message(WebRTCError(ring_message.error_code, msg))
             elif ring_message.answer:
-                send_message(WebRTCAnswer(ring_message.answer))
+                # send_message(WebRTCAnswer(ring_message.answer))
+                sdp = ring_message.answer
+                # 1) video-only answers (recvonly) → sendonly
+                sdp = sdp.replace("a=recvonly", "a=sendonly")
+                # 2) audio answers coming back as sendrecv → sendonly
+                sdp = sdp.replace("a=sendrecv", "a=sendonly")
+                _LOGGER.debug("Patched SDP for Firefox:\n%s", sdp)
+                send_message(WebRTCAnswer(sdp))
             elif ring_message.candidate:
                 send_message(
                     WebRTCCandidate(

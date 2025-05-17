@@ -1,6 +1,7 @@
 {
   "domain": "ring",
   "name": "Ring",
+  "version": "1.0.0",
   "codeowners": ["@sdb9696"],
   "config_flow": true,
   "dependencies": ["ffmpeg"],
