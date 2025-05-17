@@ -17,8 +17,7 @@ This **HAS NOT** been tested more of a fix for my core setup as I use Firefox an
 ### Usage
 
 1. Import these files into your config into a new directory ./custom_components/ring
-
-2. This will override the normal ring component with your custom one if you already have the integration
+  - This will override the normal ring component with your custom one if you already have the integration
 
 3. Restart the HA server and it should install all dependencies as well as override the ring component if already installed
 
