@@ -30,5 +30,8 @@
   "documentation": "https://www.home-assistant.io/integrations/ring",
   "iot_class": "cloud_polling",
   "loggers": ["ring_doorbell"],
-  "requirements": ["ring-doorbell==0.9.13"]
+  "requirements": [
+    "ring-doorbell==0.9.13",
+    "sdp-transform==1.1.0"
+  ]
 }

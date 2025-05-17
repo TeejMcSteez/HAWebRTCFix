@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import re;
+from sdp_transform import parse, write
 
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -46,6 +46,14 @@ MOTION_DETECTION_CAPABILITY = "motion_detection"
 
 _LOGGER = logging.getLogger(__name__)
 
+# Fixes any media coming from ring API that isn't sendonly to sendonly
+def fix_sdp(sdp: str) -> str:
+        obj = parse(sdp)
+
+        for m in obj["media"]:
+            if m.get("direction") in ("recvonly", "sendrecv"):
+                m["direction"] = "sendonly"
+        return write(obj)
 
 @dataclass(frozen=True, kw_only=True)
 class RingCameraEntityDescription(CameraEntityDescription, Generic[RingDeviceT]):
@@ -201,14 +209,10 @@ class RingCam(RingEntity[RingDoorBell], Camera):
                 msg = ring_message.error_message or ""
                 send_message(WebRTCError(ring_message.error_code, msg))
             elif ring_message.answer:
-                # send_message(WebRTCAnswer(ring_message.answer))
-                sdp = ring_message.answer
-                # 1) video-only answers (recvonly) → sendonly
-                sdp = sdp.replace("a=recvonly", "a=sendonly")
-                # 2) audio answers coming back as sendrecv → sendonly
-                sdp = sdp.replace("a=sendrecv", "a=sendonly")
-                _LOGGER.debug("Patched SDP for Firefox:\n%s", sdp)
-                send_message(WebRTCAnswer(sdp))
+                fixed_sdp = fix_sdp(ring_message.answer)
+                _LOGGER.debug("Patched SDP via sdp-transform:\n%s", fixed_sdp)
+                send_message(WebRTCAnswer(fixed_sdp))
+
             elif ring_message.candidate:
                 send_message(
                     WebRTCCandidate(
