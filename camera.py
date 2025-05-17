@@ -209,6 +209,9 @@ class RingCam(RingEntity[RingDoorBell], Camera):
                 msg = ring_message.error_message or ""
                 send_message(WebRTCError(ring_message.error_code, msg))
             elif ring_message.answer:
+                # Handles bad RTC stream from Ring
+                # Firefox enforces strict RTC spec this flips any bad offer to a good one
+                # A monkeypatch and either Ring or HA should properly fix this as I can see issues arising
                 fixed_sdp = fix_sdp(ring_message.answer)
                 _LOGGER.debug("Patched SDP via sdp-transform:\n%s", fixed_sdp)
                 send_message(WebRTCAnswer(fixed_sdp))
