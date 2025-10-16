@@ -19,6 +19,6 @@ This **HAS NOT** been tested more of a fix for my core setup as I use Firefox an
 1. Import these files into your config into a new directory ./custom_components/ring
   - This will override the normal ring component with your custom one if you already have the integration
 
-3. Restart the HA server and it should install all dependencies as well as override the ring component if already installed
+2. Restart the HA server and it should install all dependencies as well as override the ring component if already installed
 
-4. Now you can stream Ring Cams on your Firefox dashboard!
+3. Now you can stream Ring Cams on your Firefox dashboard!
