@@ -20,12 +20,12 @@ from homeassistant.components.camera import (
     Camera,
     CameraEntityDescription,
     CameraEntityFeature,
-    RTCIceCandidateInit,
     WebRTCAnswer,
     WebRTCCandidate,
     WebRTCError,
     WebRTCSendMessage,
 )
+from webrtc_models import RTCIceCandidateInit
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_aiohttp_proxy_stream
